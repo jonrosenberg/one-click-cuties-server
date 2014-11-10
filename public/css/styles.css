@@ -1,0 +1,202 @@
+/* main app styles */
+.right{
+	float: right;
+}
+.left{
+	float: left;
+}
+#loading-screen{
+	
+}
+.loader{
+	background-image: url(images/radar.gif);
+	background-position: center center;
+	background-repeat: no-repeat;
+	width: 50px;
+	height: 50px;
+}
+
+
+/* admin styles */
+#add-shop input{
+	height: 30px;
+	width:  250px;	
+}
+#add-shop textarea{
+	height: 150px;
+	width:  500px;	
+}
+.half{
+	width: 50%;
+}
+.admin-list{
+	color: white;
+}
+.admin-list li{
+	margin: 10px;
+}
+/* overwrite */
+#scroll{
+	bottom: 10px;
+}
+ul.rounded li {
+	padding: 2px;
+}
+/* footer controls */
+#bottom a[href="#maps"]{
+	display: none;
+}
+
+#bottom a[href="#details"]{
+	display: none;
+}
+
+#bottom a[href="#directions"]{
+	display: none;	
+}
+
+#bottom a[href="#home"]:after{
+	content: '0';
+}
+
+#bottom a[href="#details"]:after {
+	content: '?';
+}
+#bottom a[href="#maps"]:after {
+	content: 'N';
+}
+#bottom a[href="#directions"]:after {
+	content: '7';
+}
+#bottom a[href="#geo"]:after {
+	content: 'C';
+}
+.glyph.info:before {
+	content: "?";
+}
+/* over writes */
+#toolbar h2, .toolbar h2 {
+	font-size: 18px;
+}
+.Icon{
+    font-family: Icons;
+}
+.shop-li .Icon.details{
+	text-align: right;
+	font
+}
+
+
+.phone-list{
+	max-width: 480px;
+}
+.active{
+	display: block;
+}
+#pano-map{
+	width: 300px;
+	height: 200px;
+	margin-left: auto;
+	margin-right: auto;
+}
+.clear{
+	width: 100%;
+	clear: both;
+}
+.shop-li .name-distance,
+.shop-li .to-map,
+.shop-li .to-info
+{
+	float: left;	
+}
+.shop-li .name-distance{
+	width: 70%;
+	background-repeat: no-repeat;
+	background-size: 35px;
+	background-position: 90% 75%;
+	background-image: url(images/info-icon.png);
+
+}
+.shop-li .name-distance .inner{ 
+	padding-right: 10%;	
+}
+ul.rounded li  .to-map{
+	width: 30%;
+	background-color: #2c2c2c; 
+}
+ul.rounded li:nth-child(even) .to-map{
+	background-color: #222222;				
+}
+
+.inner{
+	padding: 5px;	
+}
+
+.open-info{
+	-webkit-transform: translateZ(0);
+	
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+	background: #262C36;
+	color: white;
+	-webkit-box-shadow: black 0px 10px 10px -10px inset;
+	box-shadow: black 0px 10px 10px -10px inset;
+	
+	height: 0px;
+	padding: 0px;
+	overflow: hidden;
+	padding-top: 1px;
+}
+/*
+.open-info.active{
+	padding: 15px;	
+	min-height: 80px;
+}*/
+.open-info p{
+	padding: 5px;
+}
+.open-info a{
+	font-size: 18px;
+	color: white;	
+}
+.open-info .address p{
+	padding-bottom: 0px;
+}
+.map-icon{
+	background-image: url(images/to-coffee-icon-dark-on-light.png);
+	background-repeat: no-repeat;
+	background-size: contain;
+	background-position: center center;
+	height: 45px;
+	width: 45px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/* animations */
+@keyframes open
+{
+	from {min-height: 0px;
+		  padding: 0px;
+	}
+	to {min-height: 80px;
+		padding: 15px;
+	}
+}
+@-webkit-keyframes open
+{
+	from {min-height: 0px;
+		  padding: 0px;
+	}
+	to {min-height: 80px;
+		padding: 15px;
+	}
+}
+
+.open-info.active{
+	animation: open 0.4s;
+	-webkit-animation: open 0.4s;
+	-webkit-animation-iteration-count: 1;
+	-webkit-animation-fill-mode: forwards;
+}
+

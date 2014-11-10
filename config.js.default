@@ -1,0 +1,9 @@
+var config = {}
+
+config.twitter = {};
+config.twitter.consumer_key = TWITTER_CONSUMER_KEY;
+config.twitter.consumer_secret = TWITTER_SECRET;
+config.twitter.access_token = TWITTER_TOKEN;
+config.twitter.access_token_secret = TWITTER_ACCESS_TOKEN_SECRET;
+
+module.exports = config;

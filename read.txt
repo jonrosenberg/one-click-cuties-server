@@ -1,0 +1,40 @@
+Create a heroku app
+
+assuming npm and all that is installed
+
+https://devcenter.heroku.com/articles/nodejs#deploy
+
+git init this folder
+
+go tohttps://api.heroku.com/myapps click 'resources' on your new app
+
+click 'add ons->get more'
+
+add mongoLab DB
+
+you're good to go :)
+
+
+/* handy stuff */
+
+heroku ps //processes will tell you if it's crashed
+
+heroku logs //get logs
+
+
+To add a dev path for local development
+	https://devcenter.heroku.com/articles/config-vars
+	http://onlyindie.dev/public
+	
+	$ heroku config:add GITHUB_USERNAME=joesmith
+	Adding config vars and restarting myapp... done, v12
+	GITHUB_USERNAME: joesmith
+	
+	$ heroku config
+	GITHUB_USERNAME: joesmith
+	OTHER_VAR:       production
+	
+	$ heroku config:get GITHUB_USERNAME
+	joesmith
+	
+	$ heroku config:remove GITHUB_USERNAME
