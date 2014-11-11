@@ -3,7 +3,6 @@ var express = require('express');
 var router = express.Router();
 var Twit = require('twit');
 
-debugger;
 
 var T = new Twit({
     consumer_key:         config.twitter.consumer_key
@@ -24,7 +23,7 @@ var ratelimitFromResonse= function(response){
 
 //The tracklist will be feed to the stream. It's word specific and not user specific so
 //don't throw common phrases in there
-var TWEET_CACHE_LIMIT = 50;
+var TWEET_CACHE_LIMIT = 500;
 var TRACKLIST = ['CuteEmergency'];
 var USERCACHE = {};
 var RESETTIME = new Date();
@@ -48,7 +47,10 @@ var addTweetToUserCache = function(tweet){
 
 var getTimelineFromTwitter = function(handle, callback){
 
-  T.get('statuses/user_timeline', { screen_name: handle }, function(err, data, response) {
+
+
+
+  T.get('statuses/user_timeline', { screen_name: handle, count: 200 }, function(err, data, response) {
 
     var info = ratelimitFromResonse(response);
 
@@ -69,6 +71,36 @@ var getTimelineFromTwitter = function(handle, callback){
 
       callback(data);
     }
+  });
+}
+
+var getApiTweetsHandle = function(handle, req, callback){
+  //first things first, if we can't make an api call then send the cache
+  if(!REMAINING){
+    if(USERCACHE[handle]){
+      callback( USERCACHE[handle] );
+      return;
+    }
+    //if we don't have a cache send an error
+    callback( {error: "rate limit exceeded, and nothing in cache for user: "+handle} );
+    return;
+  }
+
+  //The cache exists if it's been less than a minute then send the cache
+  if(USERCACHE[handle] && USERCACHE[handle].tweets.length){
+
+    var now = new Date();
+    var diff = (now.getTime() - USERCACHE[handle].lastupdate)/1000;
+
+    if(diff < 60){
+      callback( USERCACHE[handle] );
+      return;
+    }
+  }
+
+  //send updated data
+  getTimelineFromTwitter(handle, function(data){
+    callback( USERCACHE[handle] );
   });
 }
 
@@ -105,34 +137,55 @@ router.get('/api/tweets/:handle', function(req, res){
     return;
   }
 
-  //first things first, if we can't make an api call then send the cache
-  if(!REMAINING){
-    if(USERCACHE[handle]){
-      res.json(USERCACHE[handle]);
-      return;
-    }
-    //if we don't have a cache send an error
-    res.json({error: "rate limit exceeded, and nothing in cache for user: "+handle});
+  res.json( getApiTweetsHandle(handle, req) );
+  
+});
+
+router.get('/api/tweetsmedia/:handle', function(req, res){
+
+  
+  var handle = req.param('handle');
+
+  if(!handle){
+    res.json({error: "no twitter handle"});
     return;
   }
 
-  //The cache exists if it's been less than a minute then send the cache
-  if(USERCACHE[handle] && USERCACHE[handle].tweets.length){
+  getApiTweetsHandle(handle, req, function(results){
+    var tweets = results.tweets;
 
-    var now = new Date();
-    var diff = (now.getTime() - USERCACHE[handle].lastupdate)/1000;
+    debugger;
 
-    if(diff < 60){
-      res.json(USERCACHE[handle]);
-      return;
-    }
-  }
 
-  //send updated data
-  getTimelineFromTwitter(handle, function(data){
-    res.json(USERCACHE[handle]);
+    var media = [];
+    var m;
+
+    for (var i = 0; i < tweets.length; i++) {
+      if(tweets[i].entities.media){
+        m = tweets[i].entities.media;
+
+        console.log(i);
+        console.log(m);
+
+        for (var j = 0; j < m.length; j++) {
+          media.push(m[j].media_url);
+        };
+        console.log(media);
+      } 
+    };
+
+    debugger;
+
+    if(media.length) {
+      res.json( {"size": media.length, "media": media} );
+    } else {
+      res.json({error: "no media for this twitter handle"});
+    }    
   });
+
 });
+
+
 
 var stream = T.stream('statuses/filter', { track: TRACKLIST })
   stream.on('tweet', function (tweet) {
